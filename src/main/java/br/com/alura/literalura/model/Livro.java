@@ -10,14 +10,14 @@ public class Livro {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    Integer idApi;
-    String titulo;
+    private Long id;
+    private Integer idApi;
+    private String titulo;
     @ManyToMany
     @JoinTable(name = "livro_autor", joinColumns = @JoinColumn(name = "livro_id"), inverseJoinColumns = @JoinColumn(name = "autor_id"))
-    List<Autor> autores;
-    List<String> idiomas;
-    Integer numeroDeDownloads;
+    private List<Autor> autores;
+    private List<String> idiomas;
+    private Integer numeroDeDownloads;
 
     public Livro(){}
 

@@ -12,12 +12,12 @@ public class Autor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String nome;
-    Integer anoNascimento;
-    Integer anoFalecimento;
+    private Long id;
+    private String nome;
+    private Integer anoNascimento;
+    private Integer anoFalecimento;
     @ManyToMany(mappedBy = "autores", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    List<Livro> livros = new ArrayList<>();
+    private List<Livro> livros = new ArrayList<>();
 
     public Autor(){}
 
