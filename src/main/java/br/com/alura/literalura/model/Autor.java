@@ -1,6 +1,5 @@
 package br.com.alura.literalura.model;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ public class Autor {
     public Autor(){}
 
     public Autor (DadosAutor dadosAutor){
-        this.nome = dadosAutor.nome();
+        this.nome = dadosAutor.nome().trim();
         this.anoNascimento = dadosAutor.anoNascimento();
         this.anoFalecimento = dadosAutor.anoFalecimento();
     }
