@@ -1,26 +1,77 @@
 package br.com.alura.literalura.principal;
 
-import br.com.alura.literalura.model.DadosLivro;
-import br.com.alura.literalura.service.ConsumoApi;
-import br.com.alura.literalura.service.ConverteDados;
+import br.com.alura.literalura.dto.LivroDTO;
+import br.com.alura.literalura.service.LivroService;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Scanner;
 
 public class Principal {
 
-    private static final String ENDERECO_API = "https://gutendex.com/books/";
-    private ConverteDados converteDados = new ConverteDados();
-    private List<DadosLivro> livros = new ArrayList<>();
+    private Scanner leitura = new Scanner(System.in);
+    private LivroService livroService;
+
+    public Principal(LivroService livroService){
+        this.livroService = livroService;
+    }
 
     public void exibeMenu(){
-        String responseBody = converteDados.obterPropriedadeJsonEspecifica(ConsumoApi.obterDados(ENDERECO_API), "results");
+        var opcao = -1;
 
-        System.out.println("Response Body " + responseBody);
-        livros = converteDados.serializaLista(responseBody, DadosLivro.class);
-        livros.stream().forEach(System.out::println);
+        while (opcao != 0){
+            System.out.println("""
+                    1 - Buscar Livro por Titulo
+                    2 - Listar Todos os Livros
+                    3 - Listar Todos os Autores
+                    4 - Buscar Autores Vivos em Determinado Ano
+                    
+                    0 - Sair
+                    """);
 
-        System.out.println("Opa");
+            opcao = leitura.nextInt();
+            leitura.nextLine();
+
+            switch (opcao){
+                case 1:
+                    buscarLivroPorTitulo();
+                    break;
+                case 2:
+                    listarTodosOsLivros();
+                    break;
+                case 3:
+                    listarTodosOsAutores();
+                    break;
+                case 4:
+                    buscarAutoresVivosEmDeterminadoAno();
+                    break;
+                case 0:
+                    System.out.println("Obrigado por usar o LiterAlura!");
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void buscarLivroPorTitulo() {
+        System.out.print("Digite o titulo para busca >>> ");
+        var titulo = leitura.nextLine().trim();
+        LivroDTO livroDTO = livroService.buscarLivroPorTitulo(titulo);
+
+        if (livroDTO != null){
+            System.out.println(livroDTO);
+        } else {
+            System.out.println("Nenhum livro encontrado com o titulo " + titulo);
+        }
+    }
+
+    private void listarTodosOsLivros() {
+    }
+
+    private void listarTodosOsAutores() {
+    }
+
+    private void buscarAutoresVivosEmDeterminadoAno() {
     }
 
 }
