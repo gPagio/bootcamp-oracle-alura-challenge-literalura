@@ -3,6 +3,7 @@ package br.com.alura.literalura.model;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "livros")
@@ -23,8 +24,8 @@ public class Livro {
 
     public Livro (DadosLivro dadosLivro){
         this.idApi = dadosLivro.id();
-        this.titulo = dadosLivro.titulo();
-        this.idiomas = dadosLivro.idiomas();
+        this.titulo = dadosLivro.titulo().trim();
+        this.idiomas = dadosLivro.idiomas().stream().map(idiomas -> idiomas.trim()).collect(Collectors.toList());
         this.numeroDeDownloads = dadosLivro.numeroDeDownloads();
     }
 
