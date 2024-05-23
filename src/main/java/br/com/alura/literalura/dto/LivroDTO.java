@@ -17,8 +17,8 @@ public class LivroDTO {
 
     public LivroDTO (Livro livro){
         this.idApi = livro.getIdApi();
-        this.titulo = livro.getTitulo().trim();
-        this.idiomas = livro.getIdiomas().stream().map(idiomas -> idiomas.trim()).collect(Collectors.toList());
+        this.titulo = livro.getTitulo();
+        this.idiomas = livro.getIdiomas();
         this.numeroDeDownloads = livro.getNumeroDeDownloads();
     }
 }
