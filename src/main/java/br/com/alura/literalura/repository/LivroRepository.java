@@ -13,8 +13,8 @@ public interface LivroRepository extends JpaRepository<Livro, Long> {
     Optional<Livro> findByTituloContainingIgnoreCase(String tituloLivro);
 
     @Query("SELECT a FROM Livro l JOIN l.autores a")
-    List<Autor> buscarTodosOsAutores();
+    List<Autor> listarTodosOsAutores();
 
     @Query("SELECT a FROM Livro l JOIN l.autores a WHERE :ano < a.anoFalecimento")
-    List<Autor> buscarAutoresVivosEmDeterminadoAno(int ano);
+    List<Autor> listarAutoresVivosEmDeterminadoAno(int ano);
 }

@@ -18,11 +18,11 @@ public class LivroService {
     @Autowired
     private LivroRepository repository;
 
-    public List<LivroDTO> obterTodosOsLivros(){
+    public List<LivroDTO> listarTodosOsLivros(){
         return listLivroToListLivroDTO(repository.findAll());
     }
 
-    public LivroDTO buscarLivroPorTitulo(String tituloLivro){
+    public LivroDTO listarLivroPorTitulo(String tituloLivro){
         Optional<Livro> containerLivro = repository.findByTituloContainingIgnoreCase(tituloLivro);
         if (containerLivro.isPresent()){
             return livroToLivroDTO(containerLivro.get());
@@ -30,16 +30,16 @@ public class LivroService {
         return null;
     }
 
-    public List<AutorDTO> buscarTodosOsAutores(){
-        return listAutorToListAutorDTO(repository.buscarTodosOsAutores());
+    public List<AutorDTO> listarTodosOsAutores(){
+        return listAutorToListAutorDTO(repository.listarTodosOsAutores());
     }
 
     private LivroDTO livroToLivroDTO(Livro l){
         return new LivroDTO(l);
     }
 
-    public List<AutorDTO> buscarAutoresVivosEmDeterminadoAno(int ano) {
-        return listAutorToListAutorDTO(repository.buscarAutoresVivosEmDeterminadoAno(ano));
+    public List<AutorDTO> listarAutoresVivosEmDeterminadoAno(int ano) {
+        return listAutorToListAutorDTO(repository.listarAutoresVivosEmDeterminadoAno(ano));
     }
 
     private List<LivroDTO> listLivroToListLivroDTO(List<Livro> listLivro) {
