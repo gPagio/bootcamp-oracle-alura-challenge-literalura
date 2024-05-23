@@ -11,8 +11,8 @@ public class Livro {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Integer idApi;
+    private Long idLivro;
+    private Integer idLivroApi;
     private String titulo;
     @ManyToMany
     @JoinTable(name = "livro_autor", joinColumns = @JoinColumn(name = "livro_id"), inverseJoinColumns = @JoinColumn(name = "autor_id"))
@@ -23,26 +23,26 @@ public class Livro {
     public Livro(){}
 
     public Livro (DadosLivro dadosLivro){
-        this.idApi = dadosLivro.id();
+        this.idLivroApi = dadosLivro.idLivroApi();
         this.titulo = dadosLivro.titulo().trim();
         this.idiomas = dadosLivro.idiomas().stream().map(idiomas -> idiomas.trim()).collect(Collectors.toList());
         this.numeroDeDownloads = dadosLivro.numeroDeDownloads();
     }
 
-    public Long getId() {
-        return id;
+    public Long getIdLivro() {
+        return idLivro;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdLivro(Long idLivro) {
+        this.idLivro = idLivro;
     }
 
-    public Integer getIdApi() {
-        return idApi;
+    public Integer getIdLivroApi() {
+        return idLivroApi;
     }
 
-    public void setIdApi(Integer idApi) {
-        this.idApi = idApi;
+    public void setIdLivroApi(Integer idLivroApi) {
+        this.idLivroApi = idLivroApi;
     }
 
     public String getTitulo() {

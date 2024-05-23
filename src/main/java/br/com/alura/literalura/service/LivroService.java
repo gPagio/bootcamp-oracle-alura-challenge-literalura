@@ -3,6 +3,7 @@ package br.com.alura.literalura.service;
 import br.com.alura.literalura.dto.AutorDTO;
 import br.com.alura.literalura.dto.LivroDTO;
 import br.com.alura.literalura.model.Autor;
+import br.com.alura.literalura.model.DadosLivro;
 import br.com.alura.literalura.model.Livro;
 import br.com.alura.literalura.repository.LivroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,5 +49,9 @@ public class LivroService {
 
     private List<AutorDTO> listAutorToListAutorDTO(List<Autor> listAutor){
         return listAutor.stream().map(autor -> new AutorDTO(autor)).collect(Collectors.toList());
+    }
+
+    public void salvarLivroNoBanco(DadosLivro livroEncontrado) {
+        repository.save(new Livro(livroEncontrado));
     }
 }
