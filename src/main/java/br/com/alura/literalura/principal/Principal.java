@@ -3,7 +3,6 @@ package br.com.alura.literalura.principal;
 import br.com.alura.literalura.dto.AutorDTO;
 import br.com.alura.literalura.dto.LivroDTO;
 import br.com.alura.literalura.service.LivroService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Scanner;
@@ -23,9 +22,10 @@ public class Principal {
         while (opcao != 0){
             System.out.print("""
                     1 - Buscar Livro por Titulo
-                    2 - Listar Todos os Livros
-                    3 - Listar Todos os Autores
-                    4 - Buscar Autores Vivos em Determinado Ano
+                    2 - Listar Livro por Titulo
+                    3 - Listar Todos os Livros
+                    4 - Listar Todos os Autores
+                    5 - Listar Autores Vivos em Determinado Ano
                     
                     0 - Sair
                     """);
@@ -38,13 +38,16 @@ public class Principal {
                     buscarLivroPorTitulo();
                     break;
                 case 2:
-                    listarTodosOsLivros();
+                    listarLivroPorTitulo();
                     break;
                 case 3:
-                    listarTodosOsAutores();
+                    listarTodosOsLivros();
                     break;
                 case 4:
-                    buscarAutoresVivosEmDeterminadoAno();
+                    listarTodosOsAutores();
+                    break;
+                case 5:
+                    listarAutoresVivosEmDeterminadoAno();
                     break;
                 case 0:
                     System.out.println("Obrigado por usar o LiterAlura!");
@@ -56,19 +59,22 @@ public class Principal {
     }
 
     private void buscarLivroPorTitulo() {
-        System.out.print("Digite o titulo para busca >>> ");
+    }
+
+    private void listarLivroPorTitulo() {
+        System.out.print("Digite o titulo para listagem >>> ");
         var titulo = leitura.nextLine().trim();
-        LivroDTO livroDTO = livroService.buscarLivroPorTitulo(titulo);
+        LivroDTO livroDTO = livroService.listarLivroPorTitulo(titulo);
 
         if (livroDTO != null){
             System.out.println(livroDTO);
         } else {
-            System.out.println("Nenhum livro encontrado com o titulo " + titulo);
+            System.out.println("Nenhum livro cadastrado com o titulo " + titulo);
         }
     }
 
     private void listarTodosOsLivros() {
-        List<LivroDTO> listaComTodosLivros = livroService.obterTodosOsLivros();
+        List<LivroDTO> listaComTodosLivros = livroService.listarTodosOsLivros();
 
         if (!listaComTodosLivros.isEmpty()){
             listaComTodosLivros.forEach(System.out::println);
@@ -78,7 +84,7 @@ public class Principal {
     }
 
     private void listarTodosOsAutores() {
-        List<AutorDTO> listaComTodosAutores = livroService.buscarTodosOsAutores();
+        List<AutorDTO> listaComTodosAutores = livroService.listarTodosOsAutores();
 
         if (!listaComTodosAutores.isEmpty()){
             listaComTodosAutores.forEach(System.out::println);
@@ -87,16 +93,16 @@ public class Principal {
         }
     }
 
-    private void buscarAutoresVivosEmDeterminadoAno() {
-        System.out.print("Digite o ano para busca >>> ");
+    private void listarAutoresVivosEmDeterminadoAno() {
+        System.out.print("Digite o ano para listagem >>> ");
         var ano = leitura.nextInt();
         leitura.nextLine();
 
-        List<AutorDTO> listaComAutoresVivosEmDeterminadoAno = livroService.buscarAutoresVivosEmDeterminadoAno(ano);
+        List<AutorDTO> listaComAutoresVivosEmDeterminadoAno = livroService.listarAutoresVivosEmDeterminadoAno(ano);
         if (!listaComAutoresVivosEmDeterminadoAno.isEmpty()){
             listaComAutoresVivosEmDeterminadoAno.forEach(System.out::println);
         } else {
-            System.out.println("Nenhum autor vivo no ano "+ ano +"!");
+            System.out.println("Nenhum autor vivo no ano "+ ano +" está cadastrado!");
         }
     }
 }
