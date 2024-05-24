@@ -1,26 +1,14 @@
 package br.com.alura.literalura.dto;
 
-import br.com.alura.literalura.model.Autor;
-import br.com.alura.literalura.model.Livro;
-
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class LivroDTO {
-
-    private Long idLivro;
-    private Integer idLivroApi;
-    private String titulo;
-    private List<Autor> autores;
-    private List<String> idiomas;
-    private Integer numeroDeDownloads;
-
-    public LivroDTO (Livro livro){
-        this.idLivroApi = livro.getIdLivroApi();
-        this.titulo = livro.getTitulo();
-        this.autores = livro.getAutores();
-        this.idiomas = livro.getIdiomas();
-        this.numeroDeDownloads = livro.getNumeroDeDownloads();
-    }
+public record LivroDTO (Long idLivro,
+                        Integer idLivroApi,
+                        String titulo,
+                        List<AutorDTO> autores,
+                        List<String> idiomas,
+                        Integer numeroDeDownloads) {
 
     @Override
     public String toString() {
@@ -28,7 +16,7 @@ public class LivroDTO {
                 "idLivro=" + idLivro +
                 ", idLivroApi=" + idLivroApi +
                 ", titulo='" + titulo + '\'' +
-                ", autores=" + autores +
+                ", autores=" + autores.stream().map(AutorDTO::toString).collect(Collectors.joining(", ")) +
                 ", idiomas=" + idiomas +
                 ", numeroDeDownloads=" + numeroDeDownloads +
                 '}';
