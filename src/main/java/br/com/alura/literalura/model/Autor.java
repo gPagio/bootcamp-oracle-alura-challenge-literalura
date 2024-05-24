@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
 
 @Entity
 @Table(name = "autores")
@@ -11,7 +13,7 @@ public class Autor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idAutor;
     private String nome;
     private Integer anoNascimento;
     private Integer anoFalecimento;
@@ -21,17 +23,27 @@ public class Autor {
     public Autor(){}
 
     public Autor (DadosAutor dadosAutor){
-        this.nome = dadosAutor.nome().trim();
-        this.anoNascimento = dadosAutor.anoNascimento();
-        this.anoFalecimento = dadosAutor.anoFalecimento();
+        this.nome = Optional.of(dadosAutor.nome().trim()).orElse("Nenhum Nome Informado");
+
+        try {
+            this.anoNascimento = Integer.valueOf(dadosAutor.anoNascimento());
+        } catch (NumberFormatException e){
+            this.anoNascimento = 0;
+        }
+
+        try {
+            this.anoFalecimento = Integer.valueOf(dadosAutor.anoFalecimento());
+        } catch (NumberFormatException e){
+            this.anoFalecimento = 0;
+        }
     }
 
-    public Long getId() {
-        return id;
+    public Long getIdAutor() {
+        return idAutor;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdAutor(Long idAutor) {
+        this.idAutor = idAutor;
     }
 
     public String getNome() {

@@ -3,6 +3,8 @@ package br.com.alura.literalura.model;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
 @Entity
@@ -14,7 +16,7 @@ public class Livro {
     private Long idLivro;
     private Integer idLivroApi;
     private String titulo;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "livro_autor", joinColumns = @JoinColumn(name = "livro_id"), inverseJoinColumns = @JoinColumn(name = "autor_id"))
     private List<Autor> autores;
     private List<String> idiomas;
@@ -23,10 +25,22 @@ public class Livro {
     public Livro(){}
 
     public Livro (DadosLivro dadosLivro){
-        this.idLivroApi = dadosLivro.idLivroApi();
+        try {
+            this.idLivroApi = Integer.valueOf(dadosLivro.idLivroApi());
+        } catch (NumberFormatException e){
+            this.idLivroApi = 0;
+        }
+
         this.titulo = dadosLivro.titulo().trim();
+
+        this.autores = dadosLivro.autores().stream().map(dadosAutor -> new Autor(dadosAutor)).collect(Collectors.toList());
         this.idiomas = dadosLivro.idiomas().stream().map(idiomas -> idiomas.trim()).collect(Collectors.toList());
-        this.numeroDeDownloads = dadosLivro.numeroDeDownloads();
+
+        try {
+            this.numeroDeDownloads = Integer.valueOf(dadosLivro.numeroDeDownloads());
+        } catch (NumberFormatException e){
+            this.numeroDeDownloads = 0;
+        }
     }
 
     public Long getIdLivro() {
