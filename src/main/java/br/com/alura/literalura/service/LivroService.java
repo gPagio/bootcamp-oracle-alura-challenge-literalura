@@ -35,8 +35,19 @@ public class LivroService {
         return listAutorToListAutorDTO(repository.listarTodosOsAutores());
     }
 
-    private LivroDTO livroToLivroDTO(Livro l){
-        return new LivroDTO(l);
+    private LivroDTO livroToLivroDTO(Livro livro){
+        return new LivroDTO(livro.getIdLivro(),
+                livro.getIdLivroApi(),
+                livro.getTitulo(),
+                livro.getAutores()
+                        .stream()
+                        .map(autor -> new AutorDTO(autor.getIdAutor(),
+                                autor.getNome(),
+                                autor.getAnoNascimento(),
+                                autor.getAnoFalecimento()))
+                        .collect(Collectors.toList()),
+                livro.getIdiomas(),
+                livro.getNumeroDeDownloads());
     }
 
     public List<AutorDTO> listarAutoresVivosEmDeterminadoAno(int ano) {
@@ -44,11 +55,11 @@ public class LivroService {
     }
 
     private List<LivroDTO> listLivroToListLivroDTO(List<Livro> listLivro) {
-        return listLivro.stream().map(livro -> new LivroDTO(livro)).collect(Collectors.toList());
+        return listLivro.stream().map(livro -> new LivroDTO(livro.getIdLivro(), livro.getIdLivroApi(), livro.getTitulo(), livro.getAutores().stream().map(autor -> new AutorDTO(autor.getIdAutor(), autor.getNome(), autor.getAnoNascimento(), autor.getAnoFalecimento())).collect(Collectors.toList()), livro.getIdiomas(), livro.getNumeroDeDownloads())).collect(Collectors.toList());
     }
 
     private List<AutorDTO> listAutorToListAutorDTO(List<Autor> listAutor){
-        return listAutor.stream().map(autor -> new AutorDTO(autor)).collect(Collectors.toList());
+        return listAutor.stream().map(autor -> new AutorDTO(autor.getIdAutor(), autor.getNome(), autor.getAnoNascimento(), autor.getAnoFalecimento())).collect(Collectors.toList());
     }
 
     public void salvarLivroNoBanco(DadosLivro livroEncontrado) {
