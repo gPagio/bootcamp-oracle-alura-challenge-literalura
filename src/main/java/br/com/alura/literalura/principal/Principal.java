@@ -35,6 +35,7 @@ public class Principal {
                     3 - Listar Todos os Livros
                     4 - Listar Todos os Autores
                     5 - Listar Autores Vivos em Determinado Ano
+                    6 - Listar Livros Por Idioma
                     
                     0 - Sair
                     """);
@@ -58,6 +59,9 @@ public class Principal {
                     break;
                 case 5:
                     listarAutoresVivosEmDeterminadoAno();
+                    break;
+                case 6:
+                    listarLivrosPorIdioma();
                     break;
                 case 0:
                     System.out.println("Obrigado por usar o LiterAlura!");
@@ -113,17 +117,17 @@ public class Principal {
         System.out.print("Digite o ID da API para o livro que deseja salvar >>> ");
         var idLivroEscolhidoParaSalvar = leitura.nextLine();
 
-        Optional<DadosLivro> livroEscolhido = Optional.ofNullable(listaLivrosBuscados
+        List<DadosLivro> livroEscolhido = listaLivrosBuscados
                 .stream()
                 .filter(dadosLivro -> dadosLivro.idLivroApi().equals(idLivroEscolhidoParaSalvar))
-                .collect(Collectors.toList()).get(0));
+                .collect(Collectors.toList());
 
         if (livroEscolhido.isEmpty()){
             System.out.println("Nenhum livro encontrado com o ID " + idLivroEscolhidoParaSalvar);
         } else {
-            livroService.salvarLivroNoBanco(livroEscolhido.get());
+            livroService.salvarLivroNoBanco(livroEscolhido.get(0));
+            System.out.println("\nLivro foi salvo com sucesso");
         }
-        System.out.println("Livro foi salvo com sucesso");
     }
 
     private void listarLivroPorTitulo() {
@@ -169,6 +173,22 @@ public class Principal {
         } else {
             System.out.println("Nenhum autor vivo no ano "+ ano +" está cadastrado!");
         }
+    }
+
+    private void listarLivrosPorIdioma() {
+        System.out.print("Siglas dos idiomas disponíveis >>> ");
+        System.out.println(livroService.listarIdiomasDosLivrosCadastrados());
+
+        System.out.println("\nInsira a sigla do idioma para ser buscado >>> ");
+        var siglaIdiomaParaBusca = leitura.nextLine().trim();
+
+        List<LivroDTO> livrosEncontrados = livroService.listarLivrosPorIdioma(siglaIdiomaParaBusca);
+        if (livrosEncontrados.isEmpty()){
+            System.out.println("Nenhum livro encontrado com o idioma " + siglaIdiomaParaBusca);
+        } else {
+            livrosEncontrados.forEach(System.out::println);
+        }
+
     }
 }
 
