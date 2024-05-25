@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,10 +22,10 @@ public class LivroService {
         return listLivroToListLivroDTO(repository.findAll());
     }
 
-    public LivroDTO listarLivroPorTitulo(String tituloLivro){
-        Optional<Livro> containerLivro = repository.findByTituloContainingIgnoreCase(tituloLivro);
-        if (containerLivro.isPresent()){
-            return livroToLivroDTO(containerLivro.get());
+    public List<LivroDTO> listarLivrosPorTitulo(String tituloLivro){
+        List<Livro> listaLivrosEncontrados = repository.findByTituloContainingIgnoreCase(tituloLivro);
+        if (!listaLivrosEncontrados.isEmpty()){
+            return listLivroToListLivroDTO(listaLivrosEncontrados);
         }
         return null;
     }
@@ -62,6 +61,10 @@ public class LivroService {
         return listLivroToListLivroDTO(repository.listarLivrosPorIdioma(siglaIdioma));
     }
 
+    public List<LivroDTO> listarLivrosPorAutor(String nomeAutorParaBusca) {
+        return listLivroToListLivroDTO(repository.listarLivrosPorAutor(nomeAutorParaBusca));
+    }
+
     private List<LivroDTO> listLivroToListLivroDTO(List<Livro> listLivro) {
         return listLivro.stream().map(livro -> new LivroDTO(livro.getIdLivro(), livro.getIdLivroApi(), livro.getTitulo(), livro.getAutores().stream().map(autor -> new AutorDTO(autor.getIdAutor(), autor.getNome(), autor.getAnoNascimento(), autor.getAnoFalecimento())).collect(Collectors.toList()), livro.getIdiomas(), livro.getNumeroDeDownloads())).collect(Collectors.toList());
     }
@@ -73,4 +76,5 @@ public class LivroService {
     public void salvarLivroNoBanco(DadosLivro livroEncontrado) {
         repository.save(new Livro(livroEncontrado));
     }
+
 }
