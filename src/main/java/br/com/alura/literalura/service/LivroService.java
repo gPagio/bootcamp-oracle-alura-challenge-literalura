@@ -54,6 +54,14 @@ public class LivroService {
         return listAutorToListAutorDTO(repository.listarAutoresVivosEmDeterminadoAno(ano));
     }
 
+    public String listarIdiomasDosLivrosCadastrados(){
+        return String.join(", ", repository.listarIdiomasDosLivrosCadastrados());
+    }
+
+    public List<LivroDTO> listarLivrosPorIdioma(String siglaIdioma){
+        return listLivroToListLivroDTO(repository.listarLivrosPorIdioma(siglaIdioma));
+    }
+
     private List<LivroDTO> listLivroToListLivroDTO(List<Livro> listLivro) {
         return listLivro.stream().map(livro -> new LivroDTO(livro.getIdLivro(), livro.getIdLivroApi(), livro.getTitulo(), livro.getAutores().stream().map(autor -> new AutorDTO(autor.getIdAutor(), autor.getNome(), autor.getAnoNascimento(), autor.getAnoFalecimento())).collect(Collectors.toList()), livro.getIdiomas(), livro.getNumeroDeDownloads())).collect(Collectors.toList());
     }
