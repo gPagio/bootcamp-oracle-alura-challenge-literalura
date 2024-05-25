@@ -6,11 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface LivroRepository extends JpaRepository<Livro, Long> {
 
-    Optional<Livro> findByTituloContainingIgnoreCase(String tituloLivro);
+    List<Livro> findByTituloContainingIgnoreCase(String tituloLivro);
 
     @Query("SELECT a FROM Livro l JOIN l.autores a")
     List<Autor> listarTodosOsAutores();
@@ -23,4 +22,7 @@ public interface LivroRepository extends JpaRepository<Livro, Long> {
 
     @Query("SELECT l FROM Livro l WHERE :siglaIdioma MEMBER OF l.idiomas")
     List<Livro> listarLivrosPorIdioma(String siglaIdioma);
+
+    @Query("SELECT l FROM Livro l JOIN l.autores a WHERE a.nome ILIKE %:nomeAutorParaBusca% ")
+    List<Livro> listarLivrosPorAutor(String nomeAutorParaBusca);
 }
