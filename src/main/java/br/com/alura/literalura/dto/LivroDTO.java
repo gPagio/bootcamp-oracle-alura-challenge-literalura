@@ -12,13 +12,11 @@ public record LivroDTO (Long idLivro,
 
     @Override
     public String toString() {
-        return "LivroDTO{" +
-                "idLivro=" + idLivro +
-                ", idLivroApi=" + idLivroApi +
-                ", titulo='" + titulo + '\'' +
-                ", autores=" + autores.stream().map(AutorDTO::toString).collect(Collectors.joining(", ")) +
-                ", idiomas=" + idiomas +
-                ", numeroDeDownloads=" + numeroDeDownloads +
-                '}';
+        return "\nID Livro: " + idLivro +
+               "\nId Livro Api: " + idLivroApi +
+               "\nTítulo: " + titulo +
+               "\nAutores: " + autores.stream().map(autorDTO -> "ID Autor: " + autorDTO.idAutor() + ", Nome: " + autorDTO.nome() + ", Ano Nascimento: " + autorDTO.anoNascimento() + " Ano Falecimento: " + autorDTO.anoFalecimento()).collect(Collectors.joining(", ")) +
+               "\nIdiomas: " + String.join(", ", idiomas) +
+               "\nNúmero de Downloads: " + numeroDeDownloads;
     }
 }

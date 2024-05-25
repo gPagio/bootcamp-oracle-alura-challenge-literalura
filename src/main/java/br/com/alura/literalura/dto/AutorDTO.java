@@ -7,11 +7,9 @@ public record AutorDTO (Long idAutor,
 
     @Override
     public String toString() {
-        return "AutorDTO{" +
-                "id=" + idAutor +
-                ", nome='" + nome + '\'' +
-                ", anoNascimento=" + anoNascimento +
-                ", anoFalecimento=" + anoFalecimento  +
-                '}';
+        return "\nID Autor: " + idAutor +
+               "\nNome: " + nome +
+               "\nAno Nascimento: " + anoNascimento +
+               "\nAno Falecimento: " + anoFalecimento;
     }
 }
