@@ -22,6 +22,23 @@ Logo abaixo estão listadas todas as funções ofertadas pelo LiterAlura:
 0 - Sair
 ```
 
+## 📌 Dependências
+Para o correto funcionamento do LiterAlura, é necessário realizar a instalação das dependências abaixo. Clique no hyperlink em cada uma delas para ir a respectiva página de downloads.
+ - [`PostgreSQL`](https://www.postgresql.org/download/): Banco de dados usado pelo LiterAlura
+ - [`Maven`](https://maven.apache.org/install.html): Gerenciador de dependências usado pelo LiterAlura
+
+## ⚙️ Configurações
+Antes de executar o projeto devemos configurar algumas variáveis de ambiente em nossa máquina.
+
+Abaixo estão listadas as variáveis de deverão ser criadas e o conteúdo que deve conter em cada uma delas:
+|Variável|Conteúdo|Exemplo|
+|---|---|---|
+|`DB_LITERALURA_HOST`|Host do banco de dados. O endereço para acessar o mesmo juntamente com a porta|127.0.0.1:5432|
+|`DB_LITERALURA_DATABASE`|Informa o nome do banco de dados que o LiterAlura irá persistir|postgres|
+|`DB_LITERALURA_SCHEMA`|Informa o nome esquema do banco escolhido anteriormente|public|
+|`DB_LITERALURA_USER`|Informa o nome do usuário para se conectar ao banco de dados|postgres|
+|`DB_LITERALURA_PASSWORD`|Informa a senha do usuário definido na variável anterior|postgres|
+
 ## 🚀 Uso
 Para executar o projeto temos duas opções:
 
@@ -39,9 +56,8 @@ Entre na pasta do projeto pelo terminal e execute o comando abaixo:
 ```
 mvn spring-boot:run
 ```
-> [!IMPORTANT]
-> 1. Para uso da `2ª opção`, é necessário instalar e configurar o [`Maven`](https://maven.apache.org/install.html) em sua máquina.
-> 1. Ao instalar a última versão do Maven em sua máquina, caso encontre problemas na execução do LiterAlura, instale a versão `3.9.5`, que foi usada na construção do projeto.
+> [!NOTE]
+> Caso encontre problemas com o Maven na execução do LiterAlura, instale a versão `3.9.5`, que foi usada na construção do projeto.
 
 Após a execução do programa, basta escolher dentre as opções do menu para usar o software.
 
