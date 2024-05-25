@@ -15,7 +15,7 @@ public record LivroDTO (Long idLivro,
         return "\nID Livro: " + idLivro +
                "\nId Livro Api: " + idLivroApi +
                "\nTítulo: " + titulo +
-               "\nAutores: " + autores.stream().map(autorDTO -> "ID Autor: " + autorDTO.idAutor() + ", Nome: " + autorDTO.nome() + ", Ano Nascimento: " + autorDTO.anoNascimento() + " Ano Falecimento: " + autorDTO.anoFalecimento()).collect(Collectors.joining(", ")) +
+               "\nAutores - " + autores.stream().map(autorDTO -> "ID Autor: " + autorDTO.idAutor() + ", Nome: " + autorDTO.nome() + ", Ano Nascimento: " + autorDTO.anoNascimento() + " Ano Falecimento: " + autorDTO.anoFalecimento()).collect(Collectors.joining(" - ")) +
                "\nIdiomas: " + String.join(", ", idiomas) +
                "\nNúmero de Downloads: " + numeroDeDownloads;
     }
