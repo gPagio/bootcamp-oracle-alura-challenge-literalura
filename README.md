@@ -18,9 +18,19 @@ Logo abaixo estão listadas todas as funções ofertadas pelo LiterAlura:
 4 - Listar Todos os Autores
 5 - Listar Autores Vivos em Determinado Ano
 6 - Listar Livros Por Idioma
+7 - Listar Livros Por Autor
+8 - Buscar os TOP 10 Livros Mais Baixados da API
+9 - Buscar os TOP 10 Livros Menos Baixados da API
 
 0 - Sair
 ```
+> [!NOTE]
+> 1. Salvar Livros no Banco:
+>    1. Para salvar um livro no banco use a primeira opção do Menu, `1 - Buscar Livro por Titulo`;
+>    1. Após realizar a busca do livro pelo título, a função perguntará o ID do livro que deseja salvar;
+> 1. Nomenclatura de Funções:
+>    1. As opções `Buscar` farão buscas diretamente na API Gutendex;
+>    1. As opções `Listar` farão buscas diretamente no banco de dados do projeto, ou seja, apenas dentre os dados que já foram salvos no banco.
 
 ## 📌 Dependências
 Para o correto funcionamento do LiterAlura, é necessário realizar a instalação das dependências abaixo. Clique no hyperlink em cada uma delas para ir a respectiva página de downloads.
