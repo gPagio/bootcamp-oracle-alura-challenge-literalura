@@ -2,7 +2,9 @@ package br.com.alura.literalura.principal;
 
 import br.com.alura.literalura.dto.AutorDTO;
 import br.com.alura.literalura.dto.LivroDTO;
+import br.com.alura.literalura.model.DadosAutor;
 import br.com.alura.literalura.model.DadosLivro;
+import br.com.alura.literalura.model.Livro;
 import br.com.alura.literalura.service.ConsumoApi;
 import br.com.alura.literalura.service.ConverteDados;
 import br.com.alura.literalura.service.LivroService;
@@ -18,7 +20,8 @@ public class Principal {
     private ConverteDados conversor = new ConverteDados();
     private LivroService livroService;
 
-    private final String ENDERECO = "https://gutendex.com/books/?search=";
+    private final String ENDERECO_API_GERAL = "https://gutendex.com/books";
+    private final String ENDERECO_API_BUSCA = ENDERECO_API_GERAL + "/?search=";
 
     public Principal(LivroService livroService){
         this.livroService = livroService;
@@ -51,6 +54,9 @@ public class Principal {
                     4 - Listar Todos os Autores
                     5 - Listar Autores Vivos em Determinado Ano
                     6 - Listar Livros Por Idioma
+                    7 - Listar Livros Por Autor
+                    8 - Buscar os TOP 10 Livros Mais Baixados da API
+                    9 - Buscar os TOP 10 Livros Menos Baixados da API
                     
                     0 - Sair
                     """);
@@ -78,6 +84,15 @@ public class Principal {
                 case 6:
                     listarLivrosPorIdioma();
                     break;
+                case 7:
+                    listarLivrosPorAutor();
+                    break;
+                case 8:
+                    buscarTop10LivrosMaisBaixadosDaApi();
+                    break;
+                case 9:
+                    buscarTop10LivrosMenosBaixadosDaApi();
+                    break;
                 case 0:
                     System.out.println("Obrigado por usar o LiterAlura!");
                     break;
@@ -95,7 +110,7 @@ public class Principal {
         var tituloBusca = titulo.replace(" ", "%20");
 
         System.out.print("Buscando livro contendo " + titulo + " no título...");
-        var jsonBodyResponse = ConsumoApi.obterDados(ENDERECO + tituloBusca);
+        var jsonBodyResponse = ConsumoApi.obterDados(ENDERECO_API_BUSCA + tituloBusca);
         var jsonResultsProperty = conversor.obterPropriedadeJsonEspecifica(jsonBodyResponse, "results");
 
         processarLivrosBuscados(titulo, jsonResultsProperty);
@@ -117,8 +132,9 @@ public class Principal {
                 break;
             case 1:
                 DadosLivro livroEncontrado = listaLivrosBuscados.get(0);
+                System.out.println(livroEncontrado);
                 livroService.salvarLivroNoBanco(livroEncontrado);
-                System.out.println("Livro foi salvo com sucesso");
+                System.out.println("\nLivro foi salvo com sucesso");
                 break;
             default:
                 salvarUmDosLivrosBuscados(listaLivrosBuscados);
@@ -129,10 +145,10 @@ public class Principal {
     private void salvarUmDosLivrosBuscados(List<DadosLivro> listaLivrosBuscados) {
         System.out.println("\nEncontramos os livros abaixo...");
         listaLivrosBuscados.stream()
-                .sorted(Comparator.comparing(dadosLivro -> Integer.valueOf(dadosLivro.idLivroApi())))
+                .sorted(Comparator.comparing(DadosLivro::titulo))
                 .forEach(System.out::println);
 
-        System.out.print("Digite o ID da API para o livro que deseja salvar >>> ");
+        System.out.print("\nDigite o ID da API para o livro que deseja salvar (Digite 'Menu' Para Voltar ao Menu Principal) >>> ");
         var idLivroEscolhidoParaSalvar = leitura.nextLine();
 
         List<DadosLivro> livroEscolhido = listaLivrosBuscados
@@ -140,7 +156,9 @@ public class Principal {
                 .filter(dadosLivro -> dadosLivro.idLivroApi().equals(idLivroEscolhidoParaSalvar))
                 .collect(Collectors.toList());
 
-        if (livroEscolhido.isEmpty()){
+        if (idLivroEscolhidoParaSalvar.isEmpty() || idLivroEscolhidoParaSalvar.equalsIgnoreCase("menu")){
+            System.out.println("\nVoltando ao menu principal...");
+        } else if (livroEscolhido.isEmpty()){
             System.out.println("Nenhum livro encontrado com o ID " + idLivroEscolhidoParaSalvar);
         } else {
             livroService.salvarLivroNoBanco(livroEscolhido.get(0));
@@ -152,10 +170,12 @@ public class Principal {
         System.out.println("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
         System.out.print("\nDigite o titulo para listagem >>> ");
         var titulo = leitura.nextLine().trim();
-        LivroDTO livroDTO = livroService.listarLivroPorTitulo(titulo);
+        List<LivroDTO> listaLivroDTOEncontrados = livroService.listarLivrosPorTitulo(titulo);
 
-        if (livroDTO != null){
-            System.out.println(livroDTO);
+        if (!listaLivroDTOEncontrados.isEmpty()){
+            listaLivroDTOEncontrados.stream()
+                    .sorted(Comparator.comparing(LivroDTO::titulo))
+                    .forEach(System.out::println);
         } else {
             System.out.println("Nenhum livro cadastrado contendo " + titulo + " no título");
         }
@@ -167,7 +187,9 @@ public class Principal {
         List<LivroDTO> listaComTodosLivros = livroService.listarTodosOsLivros();
 
         if (!listaComTodosLivros.isEmpty()){
-            listaComTodosLivros.forEach(System.out::println);
+            listaComTodosLivros.stream()
+                    .sorted(Comparator.comparing(LivroDTO::titulo))
+                    .forEach(System.out::println);
         } else {
             System.out.println("Nenhum livro cadastrado!");
         }
@@ -179,7 +201,9 @@ public class Principal {
         List<AutorDTO> listaComTodosAutores = livroService.listarTodosOsAutores();
 
         if (!listaComTodosAutores.isEmpty()){
-            listaComTodosAutores.forEach(System.out::println);
+            listaComTodosAutores.stream()
+                    .sorted(Comparator.comparing(AutorDTO::nome))
+                    .forEach(System.out::println);
         } else {
             System.out.println("Nenhum autor cadastrado!");
         }
@@ -194,7 +218,9 @@ public class Principal {
 
         List<AutorDTO> listaComAutoresVivosEmDeterminadoAno = livroService.listarAutoresVivosEmDeterminadoAno(ano);
         if (!listaComAutoresVivosEmDeterminadoAno.isEmpty()){
-            listaComAutoresVivosEmDeterminadoAno.forEach(System.out::println);
+            listaComAutoresVivosEmDeterminadoAno.stream()
+                    .sorted(Comparator.comparing(AutorDTO::nome))
+                    .forEach(System.out::println);
         } else {
             System.out.println("Nenhum autor vivo no ano "+ ano +" está cadastrado!");
         }
@@ -213,8 +239,86 @@ public class Principal {
         if (livrosEncontrados.isEmpty()){
             System.out.println("Nenhum livro encontrado com o idioma " + siglaIdiomaParaBusca);
         } else {
-            livrosEncontrados.forEach(System.out::println);
+            livrosEncontrados.stream()
+                    .sorted(Comparator.comparing(LivroDTO::titulo))
+                    .forEach(System.out::println);
         }
+        System.out.println("\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
+    }
+
+    private void listarLivrosPorAutor() {
+        System.out.println("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
+        System.out.print("\nInsira o nome do autor para ser buscado >>> ");
+        var nomeAutorParaBusca = leitura.nextLine().trim();
+
+        List<LivroDTO> livrosEncontrados = livroService.listarLivrosPorAutor(nomeAutorParaBusca);
+        if (livrosEncontrados.isEmpty()){
+            System.out.println("Nenhum livro encontrado contendo " + nomeAutorParaBusca + " no nome do autor");
+        } else {
+            livrosEncontrados.stream()
+                    .sorted(Comparator.comparing(LivroDTO::titulo))
+                    .forEach(System.out::println);
+        }
+        System.out.println("\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
+    }
+
+    private void buscarTop10LivrosMaisBaixadosDaApi() {
+        System.out.println("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
+        System.out.print("\nBuscando os 10 livros mais baixados da API Gutendex...");
+
+        var jsonBodyResponse = ConsumoApi.obterDados(ENDERECO_API_GERAL+"/?sort=popular");
+        var jsonResultsProperty = conversor.obterPropriedadeJsonEspecifica(jsonBodyResponse, "results");
+
+        System.out.println("\n\nAbaixo estão listados os 10 livros mais baixados da API Gutendex!");
+        conversor.serializaLista(jsonResultsProperty, DadosLivro.class)
+                .stream()
+                .map(dadosLivro -> new Livro(dadosLivro))
+                .sorted(Comparator.comparing(Livro::getNumeroDeDownloads).reversed())
+                .limit(10)
+                .map(livro ->
+                        new DadosLivro(livro.getIdLivroApi().toString(),
+                                livro.getTitulo(),
+                                livro.getAutores()
+                                        .stream()
+                                        .map(autor ->
+                                                new DadosAutor(autor.getNome(),
+                                                        autor.getAnoNascimento().toString(),
+                                                        autor.getAnoFalecimento().toString()))
+                                        .collect(Collectors.toList()),
+                                livro.getIdiomas(),
+                                livro.getNumeroDeDownloads().toString()))
+                .forEach(System.out::println);
+
+        System.out.println("\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
+    }
+
+    private void buscarTop10LivrosMenosBaixadosDaApi() {
+        System.out.println("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
+        System.out.print("\nBuscando os 10 livros menos baixados da API Gutendex...");
+
+        var jsonBodyResponse = ConsumoApi.obterDados(ENDERECO_API_GERAL+"/?sort=ascending");
+        var jsonResultsProperty = conversor.obterPropriedadeJsonEspecifica(jsonBodyResponse, "results");
+
+        System.out.println("\n\nAbaixo estão listados os 10 livros menos baixados da API Gutendex!");
+        conversor.serializaLista(jsonResultsProperty, DadosLivro.class)
+                .stream()
+                .map(dadosLivro -> new Livro(dadosLivro))
+                .sorted(Comparator.comparing(Livro::getNumeroDeDownloads))
+                .limit(10)
+                .map(livro ->
+                        new DadosLivro(livro.getIdLivroApi().toString(),
+                                livro.getTitulo(),
+                                livro.getAutores()
+                                        .stream()
+                                        .map(autor ->
+                                                new DadosAutor(autor.getNome(),
+                                                        autor.getAnoNascimento().toString(),
+                                                        autor.getAnoFalecimento().toString()))
+                                        .collect(Collectors.toList()),
+                                livro.getIdiomas(),
+                                livro.getNumeroDeDownloads().toString()))
+                .forEach(System.out::println);
+
         System.out.println("\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
     }
 }
