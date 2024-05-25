@@ -9,7 +9,6 @@ import br.com.alura.literalura.service.LivroService;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
@@ -26,9 +25,25 @@ public class Principal {
     }
 
     public void exibeMenu(){
-        var opcao = -1;
+        System.out.println(" ");
+        System.out.println(" ");
+        System.out.println(" ");
+        System.out.println(" ");
+        System.out.println(" ");
+        System.out.println(" ");
+        System.out.println("""
+                 ##        ####    ######   ######   #####      ##     ##       ##  ##   #####      ##
+                 ##         ##       ##     ##       ##  ##    ####    ##       ##  ##   ##  ##    ####
+                 ##         ##       ##     ##       ##  ##   ##  ##   ##       ##  ##   ##  ##   ##  ##
+                 ##         ##       ##     ####     #####    ######   ##       ##  ##   #####    ######
+                 ##         ##       ##     ##       ####     ##  ##   ##       ##  ##   ####     ##  ##
+                 ##         ##       ##     ##       ## ##    ##  ##   ##       ##  ##   ## ##    ##  ##
+                 ######    ####      ##     ######   ##  ##   ##  ##   ######    ####    ##  ##   ##  ##
+                """);
 
+        var opcao = -1;
         while (opcao != 0){
+            System.out.println(" ");
             System.out.print("""
                     1 - Buscar Livro por Titulo
                     2 - Listar Livro por Titulo
@@ -74,14 +89,17 @@ public class Principal {
     }
 
     private void buscarLivroPorTitulo() {
-        System.out.print("Digite o titulo para busca >>> ");
+        System.out.println("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
+        System.out.print("\nDigite o titulo para busca >>> ");
         var titulo = leitura.nextLine().toLowerCase().trim();
         var tituloBusca = titulo.replace(" ", "%20");
 
+        System.out.print("Buscando livro contendo " + titulo + " no título...");
         var jsonBodyResponse = ConsumoApi.obterDados(ENDERECO + tituloBusca);
         var jsonResultsProperty = conversor.obterPropriedadeJsonEspecifica(jsonBodyResponse, "results");
 
         processarLivrosBuscados(titulo, jsonResultsProperty);
+        System.out.println("\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
     }
 
     private void processarLivrosBuscados(String tituloInformadoParaBusca, String jsonLivrosEncontrados) {
@@ -95,7 +113,7 @@ public class Principal {
 
         switch (quantidadeLivrosBuscados){
             case 0:
-                System.out.println("Nenhum livro retornado com o título " + tituloInformadoParaBusca);
+                System.out.println("\nNenhum livro encontrado contendo " + tituloInformadoParaBusca  + " no título ");
                 break;
             case 1:
                 DadosLivro livroEncontrado = listaLivrosBuscados.get(0);
@@ -109,9 +127,9 @@ public class Principal {
     }
 
     private void salvarUmDosLivrosBuscados(List<DadosLivro> listaLivrosBuscados) {
-        System.out.println("Encontramos os livros abaixo...");
+        System.out.println("\nEncontramos os livros abaixo...");
         listaLivrosBuscados.stream()
-                .sorted(Comparator.comparing(DadosLivro::idLivroApi))
+                .sorted(Comparator.comparing(dadosLivro -> Integer.valueOf(dadosLivro.idLivroApi())))
                 .forEach(System.out::println);
 
         System.out.print("Digite o ID da API para o livro que deseja salvar >>> ");
@@ -131,18 +149,21 @@ public class Principal {
     }
 
     private void listarLivroPorTitulo() {
-        System.out.print("Digite o titulo para listagem >>> ");
+        System.out.println("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
+        System.out.print("\nDigite o titulo para listagem >>> ");
         var titulo = leitura.nextLine().trim();
         LivroDTO livroDTO = livroService.listarLivroPorTitulo(titulo);
 
         if (livroDTO != null){
             System.out.println(livroDTO);
         } else {
-            System.out.println("Nenhum livro cadastrado com o titulo " + titulo);
+            System.out.println("Nenhum livro cadastrado contendo " + titulo + " no título");
         }
+        System.out.println("\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
     }
 
     private void listarTodosOsLivros() {
+        System.out.println("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
         List<LivroDTO> listaComTodosLivros = livroService.listarTodosOsLivros();
 
         if (!listaComTodosLivros.isEmpty()){
@@ -150,9 +171,11 @@ public class Principal {
         } else {
             System.out.println("Nenhum livro cadastrado!");
         }
+        System.out.println("\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
     }
 
     private void listarTodosOsAutores() {
+        System.out.println("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
         List<AutorDTO> listaComTodosAutores = livroService.listarTodosOsAutores();
 
         if (!listaComTodosAutores.isEmpty()){
@@ -160,10 +183,12 @@ public class Principal {
         } else {
             System.out.println("Nenhum autor cadastrado!");
         }
+        System.out.println("\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
     }
 
     private void listarAutoresVivosEmDeterminadoAno() {
-        System.out.print("Digite o ano para listagem >>> ");
+        System.out.println("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
+        System.out.print("\nDigite o ano para listagem >>> ");
         var ano = leitura.nextInt();
         leitura.nextLine();
 
@@ -173,13 +198,15 @@ public class Principal {
         } else {
             System.out.println("Nenhum autor vivo no ano "+ ano +" está cadastrado!");
         }
+        System.out.println("\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
     }
 
     private void listarLivrosPorIdioma() {
-        System.out.print("Siglas dos idiomas disponíveis >>> ");
+        System.out.println("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
+        System.out.print("\nSiglas dos idiomas disponíveis >>> ");
         System.out.println(livroService.listarIdiomasDosLivrosCadastrados());
 
-        System.out.println("\nInsira a sigla do idioma para ser buscado >>> ");
+        System.out.print("Insira a sigla do idioma para ser buscado >>> ");
         var siglaIdiomaParaBusca = leitura.nextLine().trim();
 
         List<LivroDTO> livrosEncontrados = livroService.listarLivrosPorIdioma(siglaIdiomaParaBusca);
@@ -188,7 +215,7 @@ public class Principal {
         } else {
             livrosEncontrados.forEach(System.out::println);
         }
-
+        System.out.println("\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
     }
 }
 
