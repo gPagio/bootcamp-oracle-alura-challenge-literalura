@@ -19,6 +19,7 @@ public class Livro {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "livro_autor", joinColumns = @JoinColumn(name = "livro_id"), inverseJoinColumns = @JoinColumn(name = "autor_id"))
     private List<Autor> autores;
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> idiomas;
     private Integer numeroDeDownloads;
 
