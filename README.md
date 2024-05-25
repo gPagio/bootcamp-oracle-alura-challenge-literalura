@@ -42,7 +42,7 @@ Abaixo estão listadas as variáveis de deverão ser criadas e o conteúdo que d
 ## 🚀 Uso
 Para executar o projeto temos duas opções:
 
-1ª Opção
+### 1ª Opção
 Abra o mesmo com a `IDE IntelliJ IDEA` e execute o método abaixo na classe `LiteraluraApplication`:
 
 ``` Java
@@ -50,7 +50,7 @@ public static void main(String[] args)
 ```
 
 
-2ª Opção
+### 2ª Opção
 Entre na pasta do projeto pelo terminal e execute o comando abaixo:
 
 ```
