@@ -3,8 +3,6 @@ package br.com.alura.literalura.model;
 import jakarta.persistence.*;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
 @Entity
